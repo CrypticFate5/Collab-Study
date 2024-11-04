@@ -1,10 +1,18 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignupPage from "./Signup.jsx";
+import LoginPage from "./Login.jsx";
+import Home from "./Home.jsx"; // Rename App to Home to avoid naming conflicts
+import "./index.css";
 function App() {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-      <h1 className="text-3xl items-center font-bold text-slate-500">
-        Hello, Tailwind with Vite!
-      </h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        {/* Add other routes here */}
+      </Routes>
+    </Router>
   );
 }
 
