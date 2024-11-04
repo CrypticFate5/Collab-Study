@@ -10,7 +10,6 @@ const Home = () => {
         style={{
           backgroundImage: `url('/banner.jpg')`,
           backgroundRepeat: "no-repeat",
-          opacity: 0.855,
         }}
       >
         {/* CollabStudy Title with One-Time Bounce Animation */}
