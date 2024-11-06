@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Toast from "./Components/Toast.jsx"; // Import the Toast component
+import Toast from "../Components/Toast.jsx"; // Import the Toast component
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
