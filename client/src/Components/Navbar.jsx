@@ -22,30 +22,32 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="w-full bg-slate-900 h-[8vh] flex items-center justify-between px-4 opacity-90">
+      <div className="w-full h-[8vh] flex items-center justify-between px-4 opacity-90 fixed top-0">
         {/* Hamburger Icon on the left */}
         <div
-          className="bg-slate-900  flex justify-center items-center gap-5"
+          className=" flex justify-center items-center gap-5"
           onClick={toggleSidebar}
         >
           <img
             src="/hamburger.svg"
             alt="Menu"
-            className="h-6 w-6 cursor-pointer  hover:bg-slate-800"
+            className="h-6 w-6 cursor-pointer  hover:Navbarshadow"
           />
-          <h1 className="text-xl">CollabStudy</h1>
+          <h1 className="text-xl font-semibold cursor-pointer ml-2">
+            CollabStudy
+          </h1>
         </div>
 
         {/* Buttons on the right */}
         <div className="flex space-x-4">
           <button
-            className="bordergradientColour text-purple-500 px-4 py-1 rounded transition duration-400 hover:gradientColour hover:text-white"
+            className="border-2 border-gray-200 text-gray-200 px-4 py-1 rounded-2xl transition duration-400 hover:bg-gray-200 hover:text-black "
             onClick={handleSignup}
           >
             Sign Up
           </button>
           <button
-            className="gradientColour text-white px-5 py-1 rounded transition duration-10000 hover:gradientColour2 hover:text-gray-200"
+            className="bg-gray-200 text-black px-5 py-1 rounded-2xl transition duration-10000  hover:text-gray-200 border-2 border-gray-200 hover:bg-transparent"
             onClick={handleLogin}
           >
             Login
@@ -55,7 +57,7 @@ const Navbar = () => {
 
       {/* Sidebar with Transition */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-800 p-4 shadow-lg transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-60 bg-slate-800 flex flex-col gap-3 p-6 text-md shadow-lg transform transition-transform duration-300 ${
           isSidebarVisible ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -66,7 +68,7 @@ const Navbar = () => {
             className="h-6 w-6 cursor-pointer"
           />
         </div>
-        <ul className="text-white space-y-2">
+        <ul className="text-white space-y-2 flex flex-col gap-2">
           <li>
             <a href="/" className="hover:text-gray-400">
               Home

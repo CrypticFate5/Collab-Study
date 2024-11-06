@@ -4,14 +4,14 @@ import Navbar from "./Components/Navbar";
 const Home = () => {
   return (
     <div className="bg-slate-900 min-h-screen">
-      <Navbar />
       <div
-        className="flex flex-col items-center justify-center h-[92vh] w-full bg-cover bg-center text-white"
+        className="flex flex-col items-center justify-center h-[100vh] w-full bg-cover bg-center text-white"
         style={{
           backgroundImage: `url('/banner.jpg')`,
           backgroundRepeat: "no-repeat",
         }}
       >
+        <Navbar />
         {/* CollabStudy Title with One-Time Bounce Animation */}
         <h1
           className="text-[150px] font-bold mb-2 opacity-90"

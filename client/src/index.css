@@ -45,4 +45,7 @@
       rgba(219, 231, 25, 1) 100%
     );
   }
+  .Navbarshadow {
+    filter: drop-shadow(0 0 1px rgb(220, 140, 240));
+  }
 }

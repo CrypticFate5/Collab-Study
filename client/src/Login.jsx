@@ -52,7 +52,7 @@ const LoginPage = () => {
   return (
     <main className="bg-black h-screen w-full flex flex-col overflow-hidden">
       <p
-        className="text-l text-gray-200 m-4 hover:text-[#ff00cc] cursor-pointer w-32"
+        className="text-l text-gray-200 m-4 hover:text-[#ff00cc] cursor-pointer w-32 fixed top-3 left-2"
         onClick={handleBacktoHome}
       >
         &larr; Back to home
