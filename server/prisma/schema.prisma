@@ -7,10 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+  
+  pdfs      Pdf[] // Relation field to Pdf model
+}
+
+model Pdf {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  s3Id      String
+  sourceId  String
+  name      String
+  createdAt DateTime @default(now())
+  
+  Users      Users     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }

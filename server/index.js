@@ -5,6 +5,7 @@ import cors from "cors";
 dotenv.config();
 import { PrismaClient } from "@prisma/client";
 import authRoute from "./routes/authRoute.js";
+import pdfRoute from "./routes/pdfRoute.js";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -27,6 +28,7 @@ checkDatabaseConnection();
 
 //routes declaration
 app.use("/", authRoute);
+app.use("/pdf", pdfRoute);
 
 // Start server
 const PORT = process.env.PORT || 5000;
