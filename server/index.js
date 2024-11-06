@@ -1,11 +1,14 @@
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
+
 dotenv.config();
 import { PrismaClient } from "@prisma/client";
+import authRoute from "./routes/authRoute.js";
 
 const app = express();
 const prisma = new PrismaClient();
-
+app.use(cors());
 app.use(express.json());
 
 // Check DB connection
@@ -22,22 +25,8 @@ async function checkDatabaseConnection() {
 // Call checkDatabaseConnection function when the server starts
 checkDatabaseConnection();
 
-// Endpoint example: Create a new user
-app.post("/users", async (req, res) => {
-  const { username, email, password } = req.body;
-  try {
-    const newUser = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password,
-      },
-    });
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(400).json({ error: "User could not be created" });
-  }
-});
+//routes declaration
+app.use("/", authRoute);
 
 // Start server
 const PORT = process.env.PORT || 5000;

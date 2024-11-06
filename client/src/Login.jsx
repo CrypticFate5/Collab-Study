@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessages, setErrorMessages] = useState({
-    usernameMsg: "",
+    usernameOrEmailMsg: "",
     passwordMsg: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -16,22 +16,43 @@ const LoginPage = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulate form submission and navigate on success.
-    // Replace with API call if backend is ready.
-    console.log("Login successful");
-    setErrorMessages({ usernameMsg: "", passwordMsg: "" });
-    navigate("/home");
+    setErrorMessages({ usernameOrEmailMsg: "", passwordMsg: "" });
+    try {
+      // API call to login endpoint
+      const response = await axios.post("http://localhost:5000/login", {
+        usernameOrEmail,
+        password,
+      });
+
+      // Clear error messages if login successful
+      console.log(response.data.message);
+
+      // Navigate to the home page on successful login
+      navigate("/home");
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // Set error messages from backend response
+        console.log(error.response.data);
+        setErrorMessages({
+          usernameOrEmailMsg: error.response.data.usernameOrEmailMsg || "",
+          passwordMsg: error.response.data.passwordMsg || "",
+        });
+      } else {
+        console.error("Login failed:", error);
+      }
+    }
   };
-  const handleBacktoHome = (e) => {
+
+  const handleBacktoHome = () => {
     navigate("/");
   };
 
   return (
     <main className="bg-black h-screen w-full flex flex-col overflow-hidden">
       <p
-        className="text-l text-gray-200 m-4 hover:text-[#ff00cc] cursor-pointer w-32 "
+        className="text-l text-gray-200 m-4 hover:text-[#ff00cc] cursor-pointer w-32"
         onClick={handleBacktoHome}
       >
         &larr; Back to home
@@ -55,12 +76,12 @@ const LoginPage = () => {
               <input
                 type="text"
                 className="mt-1 p-2 border border-slate-400 bg-black opacity-55 rounded-md w-full"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={usernameOrEmail}
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
               />
             </label>
-            {errorMessages.usernameMsg && (
-              <p className="text-red-500">{errorMessages.usernameMsg}</p>
+            {errorMessages.usernameOrEmailMsg && (
+              <p className="text-red-500">{errorMessages.usernameOrEmailMsg}</p>
             )}
             <label className="text-slate-100 relative">
               Password

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Toast from "./Components/Toast.jsx"; // Import the Toast component
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
@@ -11,23 +12,49 @@ const SignupPage = () => {
     passwordMsg: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showToast, setShowToast] = useState(false); // State for toast visibility
   const navigate = useNavigate();
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    // Placeholder for signup functionality
     setErrorMessages({ usernameMsg: "", emailMsg: "", passwordMsg: "" });
-    console.log("Signup form submitted!");
+
+    try {
+      const response = await fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setShowToast(true); // Show the toast on success
+      } else {
+        // Set validation error messages
+        setErrorMessages(data.error);
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+    }
+  };
+
+  const handleBacktoHome = () => {
+    navigate("/");
+  };
+
+  // Redirect to login page after toast disappears
+  const handleToastClose = () => {
+    setShowToast(false);
     navigate("/login");
   };
 
-  const handleBacktoHome = (e) => {
-    navigate("/");
-  };
   return (
     <main className="bg-black h-screen w-full flex flex-col overflow-hidden">
       <p
@@ -112,6 +139,14 @@ const SignupPage = () => {
           </p>
         </div>
       </div>
+
+      {/* Display toast on successful signup */}
+      {showToast && (
+        <Toast
+          message="Signup successful! Redirecting to login page..."
+          onClose={handleToastClose}
+        />
+      )}
     </main>
   );
 };
