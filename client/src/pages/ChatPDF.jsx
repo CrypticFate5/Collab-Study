@@ -95,14 +95,14 @@ const PdfUpload = () => {
         </h2>
         <div
           {...getRootProps()}
-          className="border-2 border-dashed border-gray-400 p-4 rounded-lg text-center cursor-pointer flex items-center justify-center h-48 mt-40 relative"
+          className="border-2 border-dashed border-gray-400 p-4 rounded-lg text-center cursor-pointer flex items-center justify-center h-[27rem] mt-8 relative"
         >
           <input {...getInputProps()} />
           {previewUrl ? (
             <embed
               src={previewUrl}
               type="application/pdf"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           ) : (
             <p>Drag and drop a PDF file here, or click to select</p>
@@ -122,7 +122,7 @@ const PdfUpload = () => {
 
       {/* Chat Section */}
       <div
-        className="w-2/3 p-6  text-white flex flex-col justify-between"
+        className="w-2/3 p-6 text-white flex flex-col justify-between"
         style={{
           backgroundImage: `url('/Chatbg.jpg')`,
           backgroundRepeat: "no-repeat",
@@ -164,7 +164,7 @@ const PdfUpload = () => {
             onChange={(e) => setUserQuery(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Ask a question about the PDF..."
-            className="flex-1  p-2 border rounded-lg bg-gray"
+            className="flex-1 p-2 border rounded-lg bg-gray"
           />
           <button
             className="bg-gradient-to-b from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-r-3xl rounded-l-lg"
