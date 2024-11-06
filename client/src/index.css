@@ -48,4 +48,39 @@
   .Navbarshadow {
     filter: drop-shadow(0 0 1px rgb(220, 140, 240));
   }
+  .backgroundGradient2 {
+    background: linear-gradient(
+      180deg,
+      rgba(81, 17, 57, 1) 0%,
+      rgba(15, 4, 41, 1) 30%,
+      rgba(0, 3, 6, 1) 50%
+    );
+  }
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 6px; /* Set the width of the scrollbar */
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.3
+    ); /* Thumb color with transparency */
+    border-radius: 10px; /* Rounded edges for thumb */
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5); /* Slightly lighter on hover */
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background-color: transparent; /* Transparent track */
+  }
+
+  /* Scrollbar styling for Firefox */
+  .overflow-y-auto {
+    scrollbar-width: thin; /* Thin scrollbar width */
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent; /* Thumb and track color */
+  }
 }
