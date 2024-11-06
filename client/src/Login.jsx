@@ -24,9 +24,18 @@ const LoginPage = () => {
     setErrorMessages({ usernameMsg: "", passwordMsg: "" });
     navigate("/home");
   };
+  const handleBacktoHome = (e) => {
+    navigate("/");
+  };
 
   return (
     <main className="bg-black h-screen w-full flex flex-col overflow-hidden">
+      <p
+        className="text-l text-gray-200 m-4 hover:text-[#ff00cc] cursor-pointer w-32 "
+        onClick={handleBacktoHome}
+      >
+        &larr; Back to home
+      </p>
       <div className="flex h-full justify-center items-center">
         <div
           className="bg-black bg-opacity-60 p-10 rounded-xl flex flex-col gap-5 max-w-md w-full mx-4"
