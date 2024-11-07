@@ -51,7 +51,7 @@ router.post("/signup", async (req, res) => {
   try {
     // Check if user already exists
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.users.findUnique({
       where: { username },
     });
     if (existingUser) {
@@ -59,7 +59,7 @@ router.post("/signup", async (req, res) => {
         .status(400)
         .json({ error: { usernameMsg: "Username already in use" } });
     }
-    const existingEmail = await prisma.user.findUnique({
+    const existingEmail = await prisma.users.findUnique({
       where: { email },
     });
     if (existingEmail) {
@@ -70,7 +70,7 @@ router.post("/signup", async (req, res) => {
 
     // Hash password and create user
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.users.create({
       data: {
         username,
         email,
@@ -104,7 +104,7 @@ router.post("/login", async (req, res) => {
 
   try {
     // Find user by username or email
-    const user = await prisma.user.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
         OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
       },
