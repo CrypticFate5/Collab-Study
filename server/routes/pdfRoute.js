@@ -71,7 +71,8 @@ router.get("/list", async (req, res) => {
 // View PDF route
 router.get("/view/:s3Id", (req, res) => {
   const s3Id = req.params.s3Id;
-  const s3Url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Id}`;
+  const s3Url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/uploads/${s3Id}`;
+  console.log(s3Url);
   res.redirect(s3Url);
 });
 
