@@ -7,8 +7,9 @@ const PdfUpload = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   const [userQuery, setUserQuery] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // Popup visibility state
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [uploadedPdfs, setUploadedPdfs] = useState([]); // Store list of uploaded PDFs
+  const [currentSourceId, setCurrentSourceId] = useState(null); // Store sourceId for chat queries
   const chatEndRef = useRef(null);
 
   const onDrop = (acceptedFiles) => {
@@ -27,33 +28,61 @@ const PdfUpload = () => {
     accept: "application/pdf",
   });
 
+  // Fetch uploaded PDFs on component mount
+  useEffect(() => {
+    const fetchUploadedPdfs = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/pdf/list");
+        setUploadedPdfs(response.data.pdfs);
+      } catch (error) {
+        console.error("Failed to fetch PDFs:", error);
+      }
+    };
+    fetchUploadedPdfs();
+  }, []);
+
   const handleUpload = async () => {
     if (!selectedFile) return alert("Please select a PDF file.");
 
     const formData = new FormData();
-    formData.append("pdf", selectedFile);
+    formData.append("userId", 1);
+    formData.append("pdfFile", selectedFile);
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/summarize-pdf",
+        "http://localhost:5000/pdf/upload",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      setChatMessages([
-        ...chatMessages,
-        { role: "system", text: response.data.summary },
-      ]);
+      const uploadedPdf = response.data.pdf;
+      const sourceId = response.data.sourceId;
+      setUploadedPdfs([...uploadedPdfs, uploadedPdf]); // Add to list
+      setCurrentSourceId(sourceId); // Store the sourceId for chat
+      setSelectedFile(uploadedPdf); // Update selected file to the uploaded PDF
     } catch (error) {
       console.error("Upload failed:", error);
     }
   };
 
+  const handlePdfClick = async (pdf) => {
+    setSelectedFile(pdf); // Store the selected PDF metadata
+    setCurrentSourceId(pdf.sourceId); // Set the sourceId for chat queries
+
+    try {
+      const { data } = await axios.get(`http://localhost:5000/pdf/view/${pdf.s3Id}`);
+      setPreviewUrl(data.url); // Set PDF preview URL
+      setChatMessages([{ role: "system", text: "Chat started with PDF" }]);
+    } catch (error) {
+      console.error("Failed to load PDF:", error);
+    }
+  };
+
   const handleSendQuery = async () => {
-    if (!selectedFile) {
-      setShowPopup(true); // Show popup if no PDF is uploaded
-      setTimeout(() => setShowPopup(false), 3000); // Hide after 3 seconds
+    if (!currentSourceId) {
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
       return;
     }
 
@@ -63,32 +92,25 @@ const PdfUpload = () => {
     setUserQuery("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/ask-query", {
-        query: userQuery,
+      const response = await axios.post("http://localhost:5000/pdf/chat", {
+        sourceId: currentSourceId, // Use the current sourceId for the selected PDF
+        messages: [{ role: "user", content: userQuery }],
       });
       setChatMessages((prev) => [
         ...prev,
-        { role: "assistant", text: response.data.answer },
+        { role: "assistant", text: response.data.content },
       ]);
     } catch (error) {
       console.error("Query failed:", error);
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSendQuery();
-    }
-  };
-
-  // Scroll to the bottom of the chat when new messages are added
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
   return (
     <div className="flex h-screen">
-      {/* PDF Upload Section */}
       <div className="w-1/3 p-6 backgroundGradient2 flex flex-col gap-3 items-center">
         <h2 className="text-2xl text-gray-200 text-center font-semibold mt-2">
           ChatPDF Summarizer
@@ -118,9 +140,18 @@ const PdfUpload = () => {
           Tips: Upload a PDF, then use the chat to ask questions related to the
           document.
         </p>
+
+        {/* PDF List */}
+        <div className="pdf-list mt-4">
+          <h3 className="text-lg text-gray-200">Uploaded PDFs</h3>
+          {uploadedPdfs.map((pdf, index) => (
+            <div key={index} onClick={() => handlePdfClick(pdf)} className="cursor-pointer text-white mt-2">
+              {pdf.pdfName}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Chat Section */}
       <div
         className="w-2/3 p-6 text-white flex flex-col justify-between"
         style={{
@@ -148,8 +179,7 @@ const PdfUpload = () => {
               </p>
             </div>
           ))}
-          <div ref={chatEndRef} /> {/* Invisible div to mark the end of chat */}
-          {/* Popup message when PDF is not uploaded */}
+          <div ref={chatEndRef} />
           {showPopup && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-300 text-red-900 p-5 rounded-lg shadow-lg text-center">
               Please upload a PDF first to start chatting.
@@ -162,7 +192,7 @@ const PdfUpload = () => {
             type="text"
             value={userQuery}
             onChange={(e) => setUserQuery(e.target.value)}
-            onKeyDown={handleKeyPress}
+            onKeyDown={(e) => e.key === "Enter" && handleSendQuery()}
             placeholder="Ask a question about the PDF..."
             className="flex-1 p-2 border rounded-lg bg-gray"
           />
