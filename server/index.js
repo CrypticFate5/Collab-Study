@@ -7,6 +7,7 @@ dotenv.config();
 import { PrismaClient } from "@prisma/client";
 import authRoute from "./routes/authRoute.js";
 import pdfRoute from "./routes/pdfRoute.js";
+import videoRoute from "./routes/videoRoute.js";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -41,6 +42,7 @@ checkDatabaseConnection();
 //routes declaration
 app.use("/", authRoute);
 app.use("/pdf", pdfRoute);
+app.use("/video", videoRoute);
 
 // Start server
 const PORT = process.env.PORT || 5000;
