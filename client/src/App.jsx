@@ -7,6 +7,7 @@ import LoginPage from "./pages/Login.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import Home from "./pages/Home.jsx";
 import ChatPDF from "./pages/ChatPDF.jsx";
+import VideoCall from "./pages/VideoCall.jsx";
 import PrivateRoute from "./Components/PrivateRoute.jsx";
 
 function App() {
@@ -49,6 +50,14 @@ function App() {
           element={
             <PrivateRoute isAuthenticated={isAuthenticated}>
               <ChatPDF />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/video-call"
+          element={
+            <PrivateRoute isAuthenticated={isAuthenticated}>
+              <VideoCall />
             </PrivateRoute>
           }
         />
