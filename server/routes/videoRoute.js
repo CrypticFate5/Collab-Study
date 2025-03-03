@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { Role, RtcTokenBuilder } from "agora-token/src/RtcTokenBuilder2.js";
 import { Role as RtcRole } from "agora-token/src/RtcTokenBuilder2.js";
+import jwt from "jsonwebtoken"
 
 const router = express.Router();
 const prisma = new PrismaClient();
