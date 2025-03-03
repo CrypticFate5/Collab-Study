@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 import { PrismaClient } from "@prisma/client";
@@ -9,8 +10,19 @@ import pdfRoute from "./routes/pdfRoute.js";
 
 const app = express();
 const prisma = new PrismaClient();
-app.use(cors());
+
+// Configure CORS with credentials support
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Allow requests from your frontend
+    credentials: true, // Allow cookies (important for authentication)
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  })
+);
+
 app.use(express.json());
+app.use(cookieParser()); // Add cookie parser middleware
 
 // Check DB connection
 async function checkDatabaseConnection() {

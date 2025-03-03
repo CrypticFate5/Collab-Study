@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const LoginPage = () => {
@@ -24,6 +24,8 @@ const LoginPage = () => {
       const response = await axios.post("http://localhost:5000/login", {
         usernameOrEmail,
         password,
+      }, {
+        withCredentials: true, // Ensure cookies are sent with requests
       });
 
       // Clear error messages if login successful

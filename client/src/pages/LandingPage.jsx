@@ -1,9 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const LandingPage = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
+
+  // Check if the user is authenticated when the component mounts
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/verify-token", {
+          withCredentials: true, // Ensure cookies are sent with requests
+        });
+        setIsAuthenticated(true); // User is authenticated
+      } catch (error) {
+        setIsAuthenticated(false); // User is not authenticated
+      }
+    };
+    checkAuth();
+  }, []);
+
+  // Handle logout
+  // In your Home component (or wherever you handle the logout)
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:5000/logout", {}, { withCredentials: true });
+      setIsAuthenticated(false); // Clear the authentication state
+      navigate("/login", { replace: true }); // Redirect to login page immediately
+      window.location.reload(); // Force a page reload to clear any stale state
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+  
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>; // Show loading while checking authentication
+  }
+
   return (
     <div className="bg-slate-900 min-h-screen">
+      <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+
       <div
         className="flex flex-col items-center justify-center h-[100vh] w-full bg-cover bg-center text-white"
         style={{
@@ -11,7 +50,6 @@ const Home = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <Navbar />
         {/* CollabStudy Title with One-Time Bounce Animation */}
         <h1
           className="text-[150px] font-bold mb-2 opacity-90"
@@ -72,4 +110,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default LandingPage;
